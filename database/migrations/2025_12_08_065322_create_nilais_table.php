@@ -7,21 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     public function up(): void
-{
-   Schema::create('nilais', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('siswa_id')->constrained('siswas')->onDelete('cascade');
-    $table->foreignId('mapel_id')->constrained('mapels')->onDelete('cascade');
-    $table->integer('nilai');
-    $table->timestamps();
-    $table->text('evaluasi')->nullable()->after('nilai');
-    $table->foreignId('pertemuan_id')
-      ->constrained('pertemuans')
-      ->cascadeOnDelete();
-
-});
-
-
-}
-
+    {
+        Schema::create('nilais', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('siswa_id')->constrained('siswas')->onDelete('cascade');
+            $table->foreignId('mapel_id')->constrained('mapels')->onDelete('cascade');
+            $table->integer('nilai');
+            $table->text('evaluasi')->nullable(); // <- HAPUS after()
+            $table->foreignId('pertemuan_id')
+                ->constrained('pertemuans')
+                ->cascadeOnDelete();
+            $table->timestamps();
+        });
+    }
 };
