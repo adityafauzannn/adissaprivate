@@ -12,7 +12,9 @@ class MapelSeeder extends Seeder
         $mapels = ['Baca', 'Tulis', 'Hitung', 'Mengaji', 'Matematika'];
 
         foreach ($mapels as $nama) {
-            Mapel::updateOrCreate(['nama_mapel' => $nama]);
+            Mapel::updateOrCreate(
+                ['nama_mapel' => $nama]
+            );
         }
     }
 }

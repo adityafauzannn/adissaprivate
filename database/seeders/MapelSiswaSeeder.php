@@ -10,15 +10,21 @@ class MapelSiswaSeeder extends Seeder
 {
     public function run(): void
     {
-        $mapelBTHM = Mapel::whereIn('nama_mapel', ['Baca','Tulis','Hitung','Mengaji'])->pluck('id')->toArray();
-        $mapelMatematika = Mapel::where('nama_mapel','Matematika')->pluck('id')->toArray();
+        $mapelBTHM = Mapel::whereIn('nama_mapel', ['Baca','Tulis','Hitung','Mengaji'])->pluck('id');
+        $mapelMatematika = Mapel::where('nama_mapel','Matematika')->pluck('id');
+
         $siswas = Siswa::all();
 
         foreach ($siswas as $siswa) {
-            if (in_array($siswa->kelas, ['TK','SD1','SD2','SD3'])) {
+
+            if (in_array($siswa->kelas, ['PRA','TK','1','2','3'])) {
+
                 $siswa->mapels()->syncWithoutDetaching($mapelBTHM);
+
             } else {
+
                 $siswa->mapels()->syncWithoutDetaching($mapelMatematika);
+
             }
         }
     }

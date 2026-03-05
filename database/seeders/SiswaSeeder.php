@@ -4,28 +4,28 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Siswa;
+use League\Csv\Reader;
+use Illuminate\Support\Str;
 
 class SiswaSeeder extends Seeder
 {
     public function run(): void
     {
-        $kelasTKSD3 = ['TK','SD1','SD2','SD3'];
-        $kelasSD4SMP = ['SD4','SD5','SD6','SMP7','SMP8','SMP9'];
+        $csv = Reader::createFromPath(database_path('seeders/data/siswas.csv'), 'r');
+        $csv->setHeaderOffset(0);
 
-        // Siswa TK–SD3
-        foreach ($kelasTKSD3 as $kelas) {
-            Siswa::updateOrCreate(
-                ['nama' => 'Siswa '.$kelas, 'kelas' => $kelas],
-                ['kontak_orangtua' => '0812345678'.rand(10,99)]
-            );
-        }
+        foreach ($csv as $record) {
 
-        // Siswa SD4–SMP
-        foreach ($kelasSD4SMP as $kelas) {
-            Siswa::updateOrCreate(
-                ['nama' => 'Siswa '.$kelas, 'kelas' => $kelas],
-                ['kontak_orangtua' => '0812345678'.rand(10,99)]
-            );
+            Siswa::create([
+                'nama' => $record['nama'],
+                'kelas' => $record['kelas'],
+                'alamat' => $record['alamat'] ?? null,
+                'nama_orangtua' => $record['nama_orangtua'] ?? null,
+                'kontak_orangtua' => $record['kontak_orangtua'],
+                'foto' => $record['foto'] ?? null,
+                'token' => Str::uuid()->toString(), // token unik otomatis
+            ]);
+
         }
     }
 }

@@ -21,14 +21,14 @@ class NilaiController extends Controller
         $search = $request->search;
 
         $siswa = Siswa::with([
-    'pertemuans.nilais.mapel',
-    'pertemuans.evaluasi'
-            ])
-            ->when($search, function ($query) use ($search) {
-                $query->where('nama', 'like', "%$search%");
-            })
-            ->orderBy('nama')
-            ->get();
+            'pertemuans.nilais.mapel',
+            'pertemuans.evaluasi'
+        ])
+        ->when($search, function ($query) use ($search) {
+            $query->where('nama', 'like', "%$search%");
+        })
+        ->orderBy('nama')
+        ->get();
 
         $mapel = Mapel::orderBy('nama_mapel')->get();
 
@@ -48,7 +48,7 @@ class NilaiController extends Controller
     }
 
     // ===========================
-    // SIMPAN NILAI + EVALUASI (PER PERTEMUAN)
+    // SIMPAN NILAI + EVALUASI
     // ===========================
     public function store(Request $request)
     {
@@ -78,7 +78,7 @@ class NilaiController extends Controller
             ]);
 
             // ===========================
-            // SIMPAN NILAI (TIDAK OVERWRITE)
+            // SIMPAN NILAI
             // ===========================
             foreach ($request->nilai as $mapel_id => $nilai) {
                 if ($nilai !== null && $nilai !== '') {
@@ -92,16 +92,14 @@ class NilaiController extends Controller
             }
 
             // ===========================
-            // SIMPAN EVALUASI (WAJIB KE PERTEMUAN)
+            // SIMPAN EVALUASI
             // ===========================
             if ($request->filled('evaluasi')) {
                 Evaluasi::create([
-    'siswa_id'     => $request->siswa_id,
-    'pertemuan_id' => $pertemuan->id,
-    'tanggal'      => $pertemuan->tanggal, // 🔥 INI KUNCI
-    'catatan_guru' => $request->evaluasi,
-]);
-
+                    'siswa_id'     => $request->siswa_id,
+                    'pertemuan_id' => $pertemuan->id,
+                    'catatan_guru' => $request->evaluasi,
+                ]);
             }
         });
 
@@ -110,7 +108,7 @@ class NilaiController extends Controller
     }
 
     // ===========================
-    // HAPUS SEMUA DATA 1 SISWA
+    // HAPUS DATA PERTEMUAN SISWA
     // ===========================
     public function destroyBySiswa($siswa_id)
     {
